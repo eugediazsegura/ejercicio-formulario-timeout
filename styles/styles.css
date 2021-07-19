@@ -81,12 +81,13 @@ input {
 #error-container {
   width: 100%;
   display: flex;
+  flex-direction: column;
 }
 
 small {
   color: #c21736;
   font-weight: 700;
-  text-align: center;
+  text-align: left;
 }
 
 .hidden {

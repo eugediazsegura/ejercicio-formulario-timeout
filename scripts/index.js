@@ -1,7 +1,8 @@
+//const { Console } = require("console");
+
 // Esta es la base de datos de nuestros usuarios
 const baseDeDatos = {
-  usuarios: [
-    {
+  usuarios: [{
       id: 1,
       name: "Steve Jobs",
       email: "steve@jobs.com",
@@ -34,6 +35,63 @@ const baseDeDatos = {
 
 // 1) Escuchar el evento necesario para reaccionar cuando la persona
 // haga click en el botón iniciar sesión.
+let form = document.querySelector('#formLogin');
+let loader = document.querySelector('#loader');
+let btnLogin = document.querySelector('.login-btn');
+let email = document.querySelector("#email-input");
+let password = document.querySelector('#password-input');
+let errorC = document.querySelector('#error-container');
+let main = document.querySelector('main')
+let regex = /^\w+([\w+|\.|\-]*\w+)*@\w([\w+|\.|\-]*\w+)*\.\w{2,4}$/;
+let errores = [];
+
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  errorC.classList.add('hidden');
+  loader.classList.remove('hidden');
+  setTimeout(() => {
+    errores = [];
+    errorC.innerHTML = ""
+    validarEmail(email.value);
+    validarUsuario(email.value, password.value);
+    validarPassword(password.value);
+    if (errores.length > 0) {
+      loader.classList.add('hidden');
+      errorC.classList.remove('hidden');;
+      errores.forEach(error => {
+        errorC.innerHTML += `<small>${error}</small>`
+      });
+    } else {
+      form.classList.add('hidden')
+      main.innerHTML = "<h1> Bienvenido al sitio 😀 </h1>"
+    }
+
+  }, 3000);
+})
+
+function validarEmail(value) {
+  if (!regex.test(value) || value == "") {
+    errores.push("Ingrese un email válido")
+  }
+}
+
+
+function validarUsuario(emailValue, passValue) {
+  let usuario = baseDeDatos.usuarios.find(e => e.email == emailValue)
+  if (usuario == undefined) {
+    errores.push("El usuario no existe")
+  } else if (usuario.password != passValue) {
+    errores.push("La contraseña es errónea")
+  }
+}
+
+function validarPassword(passValue) {
+  if (passValue.length < 5) {
+    errores.push("La contraseña debe tener como mínimo 5 caracteres")
+  }
+}
+
 
 // 2) El proceso de inicio de sesión deberá tener una demora de 3 segundos.
 // Deberás agregar la función correspondiente para simular dicha demora.
